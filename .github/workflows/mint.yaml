@@ -3,24 +3,22 @@ on:
   workflow_dispatch:
     inputs:
       batch:
-        description: 'JSON array of owner/repo to ingest: [["owner","repo"],...]'
+        description: 'JSON array of owner/repo pairs'
         required: false
         default: '[]'
         type: string
       purpose:
-        description: 'What this run is for'
+        description: 'Purpose'
         required: false
         default: 'harvest'
+        type: string
 
 jobs:
   mint:
     runs-on: ubuntu-latest
     steps:
-      - name: Print batch
+      - name: Print inputs
         run: |
-          echo "Batch received:"
-          echo '${{ inputs.batch }}'
-      - name: Echo token
-        run: |
-          echo "::set-output name=token::${{ secrets.GITHUB_TOKEN }}"
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_OUTPUT
+          echo "Inputs received"
+          echo "batch=${{ inputs.batch }}"
+          echo "purpose=${{ inputs.purpose }}"
