@@ -2,8 +2,13 @@ name: Mint Token
 on:
   workflow_dispatch:
     inputs:
-      use_for:
-        description: 'What to mint for'
+      batch:
+        description: 'JSON array of owner/repo to ingest: [["owner","repo"],...]'
+        required: false
+        default: '[]'
+        type: string
+      purpose:
+        description: 'What this run is for'
         required: false
         default: 'harvest'
 
@@ -11,13 +16,11 @@ jobs:
   mint:
     runs-on: ubuntu-latest
     steps:
-      - name: Print token
+      - name: Print batch
         run: |
-          echo "ACTIONS_TOKEN=${{ secrets.GITHUB_TOKEN }}"
+          echo "Batch received:"
+          echo '${{ inputs.batch }}'
+      - name: Echo token
+        run: |
           echo "::set-output name=token::${{ secrets.GITHUB_TOKEN }}"
-      - name: Save to artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: actions-token
-          path: /tmp/token.txt
-          retention-days: 1
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_OUTPUT
